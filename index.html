@@ -205,10 +205,9 @@ const materials=[
 ["🎨","الفنون"],
 ["☪️","التربية الدينية"]
 ];
-const grade = document.getElementById("teacherGrade");
-const subjects=document.getElementById("subjects");
-const agenda=document.getElementById("agenda");
-
+const grade = document.getElementById("grade");
+const subjects = document.getElementById("subjects");
+const agenda = document.getElementById("agenda");
 grade.addEventListener("change",function(){
 subjects.innerHTML="";
 agenda.innerHTML="";
@@ -220,7 +219,6 @@ const box=document.createElement("div");
 box.className="subject";
 box.innerHTML="<div style='font-size:35px'>"+m[0]+"</div>"+m[1];
 
-box.onclick=function(){
 box.onclick = async function () {
   const snapshot = await db.collection("homeworks")
     .where("grade", "==", grade.value)
