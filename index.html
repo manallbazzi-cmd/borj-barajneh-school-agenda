@@ -250,8 +250,10 @@ box.onclick = async function () {
 
   html += `</div>`;
   agenda.innerHTML = html;
-};
-window.scrollTo({top:agenda.offsetTop,behavior:"smooth"});
+  window.scrollTo({
+    top: agenda.offsetTop,
+    behavior: "smooth"
+  });
 };
 
 subjects.appendChild(box);
