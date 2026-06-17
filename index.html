@@ -258,6 +258,13 @@ subjects.appendChild(box);
 });
 });
 
+// إعادة بناء المواد تلقائياً إذا كان هناك صف محدد
+window.addEventListener("load", () => {
+  if (grade.value) {
+    grade.dispatchEvent(new Event("change"));
+  }
+});
+
 async function saveHomework() {
   const grade = document.getElementById("teacherGrade").value;
   const subject = document.getElementById("teacherSubject").value;
