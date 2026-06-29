@@ -629,24 +629,28 @@ async function loadTeacherHomeworks() {
     snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
     docs.sort((a, b) => b.date.localeCompare(a.date));
 
-    list.innerHTML = docs.map(d => `
-      <div class="entry" id="entry-${d.id}">
+    list.innerHTML = '';
+    docs.forEach(d => {
+      const entry = document.createElement('div');
+      entry.className = 'entry';
+      entry.id = `entry-${d.id}`;
+      entry.innerHTML = `
         <div class="entry-row">
           <div style="flex:1">
             <div class="entry-meta">📅 ${formatDate(d.date)}</div>
             <div class="entry-text" style="margin-top:4px">📝 ${d.homework}</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-            <button class="btn btn-secondary btn-sm"
-              onclick="startEdit('${d.id}','${d.grade}','${d.subject}','${d.date}',${JSON.stringify(d.homework)})">
-              ✏️ تعديل
-            </button>
-            <button class="btn btn-danger btn-sm" onclick="teacherDeleteHomework('${d.id}')">
-              🗑️ حذف
-            </button>
+            <button class="btn btn-secondary btn-sm edit-btn">✏️ تعديل</button>
+            <button class="btn btn-danger btn-sm delete-btn">🗑️ حذف</button>
           </div>
-        </div>
-      </div>`).join('');
+        </div>`;
+      entry.querySelector('.edit-btn').addEventListener('click', () =>
+        startEdit(d.id, d.grade, d.subject, d.date, d.homework));
+      entry.querySelector('.delete-btn').addEventListener('click', () =>
+        teacherDeleteHomework(d.id));
+      list.appendChild(entry);
+    });
   } catch(e) {
     list.innerHTML = `<div class="entry" style="border-color:#ef4444">❌ حدث خطأ في التحميل</div>`;
   }
