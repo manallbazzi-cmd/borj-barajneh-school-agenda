@@ -211,13 +211,14 @@ textarea{resize:vertical;min-height:100px}
       <h2 style="font-size:1.1rem;color:#0d2137">بوابة الأستاذ</h2>
     </div>
 
+    <!-- Add / Edit Form -->
     <div class="card">
-      <div class="card-title">➕ إضافة واجب جديد</div>
-      <div class="card-subtitle">أدخل تفاصيل الواجب وانقر على "حفظ الواجب"</div>
+      <div class="card-title" id="teacherFormTitle">➕ إضافة واجب جديد</div>
+      <div class="card-subtitle">أدخل تفاصيل الواجب ثم اختر الصف والمادة لعرض الواجبات الحالية</div>
 
       <div class="form-group">
         <label>الصف الدراسي</label>
-        <select id="teacherGrade">
+        <select id="teacherGrade" onchange="loadTeacherHomeworks()">
           <option value="">-- اختر الصف --</option>
           <option>الأول الأساسي</option>
           <option>الثاني الأساسي</option>
@@ -233,7 +234,7 @@ textarea{resize:vertical;min-height:100px}
 
       <div class="form-group">
         <label>المادة</label>
-        <select id="teacherSubject">
+        <select id="teacherSubject" onchange="loadTeacherHomeworks()">
           <option value="">-- اختر المادة --</option>
           <option>Math</option>
           <option>Science</option>
@@ -259,7 +260,17 @@ textarea{resize:vertical;min-height:100px}
         <textarea id="teacherHomework" placeholder="اكتب الواجب أو الملاحظة هنا..."></textarea>
       </div>
 
-      <button class="btn btn-primary" onclick="saveHomework()">💾 حفظ الواجب</button>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn btn-primary" id="teacherSaveBtn" onclick="saveHomework()" style="margin-top:0">💾 حفظ الواجب</button>
+        <button class="btn btn-secondary" id="teacherCancelBtn" onclick="cancelEdit()" style="display:none;margin-top:0;width:auto;padding:13px 20px">✖ إلغاء</button>
+      </div>
+    </div>
+
+    <!-- Existing Homeworks for selected grade/subject -->
+    <div class="card" id="teacherHomeworksCard" style="display:none">
+      <div class="card-title">📋 الواجبات الحالية</div>
+      <div class="card-subtitle" id="teacherHomeworksSubtitle"></div>
+      <div id="teacherHomeworksList"></div>
     </div>
   </div>
 
@@ -527,6 +538,8 @@ function formatDate(dateStr) {
 }
 
 // ===== Teacher Portal =====
+let editingId = null;
+
 async function saveHomework() {
   const grade = document.getElementById("teacherGrade").value;
   const subject = document.getElementById("teacherSubject").value;
@@ -539,12 +552,103 @@ async function saveHomework() {
   }
 
   try {
-    await db.collection("homeworks").add({ grade, subject, date, homework });
-    showToast('تم حفظ الواجب بنجاح', 'success');
-    document.getElementById("teacherHomework").value = "";
-    document.getElementById("teacherDate").value = "";
+    if (editingId) {
+      await db.collection("homeworks").doc(editingId).update({ grade, subject, date, homework });
+      showToast('تم تعديل الواجب بنجاح', 'success');
+      cancelEdit();
+    } else {
+      await db.collection("homeworks").add({ grade, subject, date, homework });
+      showToast('تم حفظ الواجب بنجاح', 'success');
+      document.getElementById("teacherHomework").value = "";
+      document.getElementById("teacherDate").value = "";
+    }
+    loadTeacherHomeworks();
   } catch(e) {
     showToast('حدث خطأ أثناء الحفظ', 'error');
+  }
+}
+
+function startEdit(id, grade, subject, date, homework) {
+  editingId = id;
+  document.getElementById("teacherGrade").value = grade;
+  document.getElementById("teacherSubject").value = subject;
+  document.getElementById("teacherDate").value = date;
+  document.getElementById("teacherHomework").value = homework;
+  document.getElementById("teacherFormTitle").textContent = "✏️ تعديل الواجب";
+  document.getElementById("teacherSaveBtn").textContent = "💾 حفظ التعديل";
+  document.getElementById("teacherCancelBtn").style.display = "flex";
+  document.querySelector('#teacher .card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEdit() {
+  editingId = null;
+  document.getElementById("teacherHomework").value = "";
+  document.getElementById("teacherDate").value = "";
+  document.getElementById("teacherFormTitle").textContent = "➕ إضافة واجب جديد";
+  document.getElementById("teacherSaveBtn").textContent = "💾 حفظ الواجب";
+  document.getElementById("teacherCancelBtn").style.display = "none";
+}
+
+async function teacherDeleteHomework(id) {
+  if (!confirm("هل أنت متأكد من حذف هذا الواجب؟")) return;
+  try {
+    await db.collection("homeworks").doc(id).delete();
+    if (editingId === id) cancelEdit();
+    showToast('تم حذف الواجب', 'success');
+    loadTeacherHomeworks();
+  } catch(e) {
+    showToast('حدث خطأ أثناء الحذف', 'error');
+  }
+}
+
+async function loadTeacherHomeworks() {
+  const grade = document.getElementById("teacherGrade").value;
+  const subject = document.getElementById("teacherSubject").value;
+  const card = document.getElementById("teacherHomeworksCard");
+  const list = document.getElementById("teacherHomeworksList");
+  const subtitle = document.getElementById("teacherHomeworksSubtitle");
+
+  if (!grade || !subject) { card.style.display = 'none'; return; }
+
+  card.style.display = 'block';
+  subtitle.textContent = `${grade} — ${subject}`;
+  list.innerHTML = `<div class="loading">⏳ جاري التحميل...<span class="spinner"></span></div>`;
+
+  try {
+    const snapshot = await db.collection("homeworks")
+      .where("grade", "==", grade)
+      .where("subject", "==", subject)
+      .get();
+
+    if (snapshot.empty) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div>لا توجد واجبات لهذا الصف والمادة</div></div>`;
+      return;
+    }
+
+    const docs = [];
+    snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+    docs.sort((a, b) => b.date.localeCompare(a.date));
+
+    list.innerHTML = docs.map(d => `
+      <div class="entry" id="entry-${d.id}">
+        <div class="entry-row">
+          <div style="flex:1">
+            <div class="entry-meta">📅 ${formatDate(d.date)}</div>
+            <div class="entry-text" style="margin-top:4px">📝 ${d.homework}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+            <button class="btn btn-secondary btn-sm"
+              onclick="startEdit('${d.id}','${d.grade}','${d.subject}','${d.date}',${JSON.stringify(d.homework)})">
+              ✏️ تعديل
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="teacherDeleteHomework('${d.id}')">
+              🗑️ حذف
+            </button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = `<div class="entry" style="border-color:#ef4444">❌ حدث خطأ في التحميل</div>`;
   }
 }
 
