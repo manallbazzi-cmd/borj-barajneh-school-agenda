@@ -4,185 +4,317 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>الأجندة الإلكترونية - مدرسة برج البراجنة الرسمية الأولى للصبيان</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#eef3fb;color:#0d2137}
-header{background:linear-gradient(135deg,#0d2137,#1a56a0);padding:35px 20px;color:#fff;text-align:center}
-.container{max-width:1000px;margin:auto;padding:20px}
-.portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.portal{background:#fff;border-radius:20px;padding:30px;text-align:center;
-box-shadow:0 6px 20px rgba(0,0,0,.1);cursor:pointer;transition:.3s}
-.portal:hover{transform:translateY(-6px)}
-.icon{font-size:55px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',Tahoma,Arial,sans-serif;background:#f0f4fb;color:#0d2137;min-height:100vh}
+
+/* Header */
+header{background:linear-gradient(135deg,#0a1e3a 0%,#1a56a0 60%,#2271cc 100%);padding:30px 20px;color:#fff;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 60%);pointer-events:none}
+.school-logo{width:110px;height:110px;object-fit:cover;border-radius:50%;border:4px solid rgba(255,255,255,.3);box-shadow:0 8px 32px rgba(0,0,0,.3);margin-bottom:14px;background:#fff;padding:4px}
+header h1{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:900;letter-spacing:-.5px;margin-bottom:6px}
+header p{font-size:.95rem;opacity:.85;margin-top:4px}
+.header-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 14px;font-size:.8rem;margin-top:8px;backdrop-filter:blur(4px)}
+
+/* Container */
+.container{max-width:1050px;margin:0 auto;padding:28px 16px}
+
+/* Portal Cards */
+.portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:10px}
+.portal{background:#fff;border-radius:22px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .25s ease;border:2px solid transparent;position:relative;overflow:hidden}
+.portal::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(26,86,160,.04));opacity:0;transition:.25s}
+.portal:hover{transform:translateY(-8px);box-shadow:0 20px 48px rgba(26,86,160,.18);border-color:#1a56a0}
+.portal:hover::before{opacity:1}
+.portal-icon{font-size:58px;margin-bottom:14px;display:block}
+.portal h2{font-size:1.2rem;font-weight:700;color:#0d2137;margin-bottom:6px}
+.portal p{font-size:.88rem;color:#64748b}
+.portal-badge{display:inline-block;background:#eef3fb;color:#1a56a0;border-radius:12px;padding:3px 12px;font-size:.78rem;font-weight:600;margin-top:10px}
+
+/* Screen & Card */
 .screen{display:none}
-.active{display:block}
-.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.1);margin-top:20px}
-select,input,textarea,button{
-width:100%;padding:14px;margin-top:12px;border-radius:12px;
-border:2px solid #dbe4f3;font-size:16px;box-sizing:border-box
-}
-button{background:#1a56a0;color:#fff;border:none;font-weight:bold;cursor:pointer}
-.subjects{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:15px;margin-top:20px}
-.subject{background:#fff;padding:18px;border-radius:16px;text-align:center;
-box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
-.entry{background:#f8fbff;border-right:5px solid #1a56a0;padding:15px;border-radius:12px;margin-top:12px}
-.back{background:#64748b}
-.small{color:#64748b}
-      .school-logo{
-  width:140px;
-  height:auto;
-  background:#fff;
-  border-radius:50%;
-  padding:8px;
-  margin-bottom:15px;
-  box-shadow:0 4px 15px rgba(0,0,0,.2);
+.card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.07);margin-top:20px;border:1px solid rgba(0,0,0,.05)}
+.card-title{font-size:1.2rem;font-weight:700;color:#0d2137;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.card-subtitle{font-size:.88rem;color:#64748b;margin-bottom:20px}
+
+/* Forms */
+.form-group{margin-top:16px}
+.form-group label{display:block;font-size:.85rem;font-weight:600;color:#374151;margin-bottom:6px}
+select,input,textarea{width:100%;padding:13px 16px;border-radius:12px;border:2px solid #e2e8f0;font-size:.95rem;font-family:'Cairo',inherit;color:#0d2137;background:#fafafa;transition:border-color .2s,box-shadow .2s;outline:none}
+select:focus,input:focus,textarea:focus{border-color:#1a56a0;box-shadow:0 0 0 4px rgba(26,86,160,.1);background:#fff}
+textarea{resize:vertical;min-height:100px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 20px;border-radius:12px;border:none;font-size:.95rem;font-family:'Cairo',inherit;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+.btn-primary{background:linear-gradient(135deg,#1a56a0,#2271cc);color:#fff;box-shadow:0 4px 14px rgba(26,86,160,.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,86,160,.4)}
+.btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;box-shadow:0 4px 14px rgba(220,38,38,.25)}
+.btn-danger:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(220,38,38,.35)}
+.btn-secondary{background:#f1f5f9;color:#374151;border:2px solid #e2e8f0}
+.btn-secondary:hover{background:#e2e8f0}
+.btn-back{background:transparent;color:#64748b;border:2px solid #e2e8f0;width:auto;padding:9px 18px;margin-top:0}
+.btn-back:hover{background:#f1f5f9;color:#0d2137}
+.btn-sm{width:auto;padding:7px 16px;font-size:.82rem;margin-top:0}
+
+/* Section header */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+
+/* Subjects Grid */
+.subjects{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:20px}
+.subject{background:#fff;padding:20px 14px;border-radius:18px;text-align:center;border:2px solid #e2e8f0;cursor:pointer;transition:all .2s;user-select:none}
+.subject:hover{border-color:#1a56a0;background:#f0f6ff;transform:translateY(-3px);box-shadow:0 8px 20px rgba(26,86,160,.12)}
+.subject-icon{font-size:34px;margin-bottom:8px;display:block}
+.subject-name{font-size:.85rem;font-weight:600;color:#0d2137}
+
+/* Entries */
+.entry{background:#f8fbff;border-right:4px solid #1a56a0;padding:16px 18px;border-radius:14px;margin-top:12px}
+.entry-meta{font-size:.82rem;color:#64748b;margin-bottom:4px}
+.entry-text{font-size:.95rem;color:#0d2137;font-weight:500}
+.entry-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+
+/* Announcement Banner */
+.announcement-banner{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #f59e0b;border-radius:14px;padding:14px 18px;margin-top:16px;font-size:.92rem;display:none}
+.announcement-banner strong{color:#92400e}
+
+/* Toast */
+#toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:#fff;border-radius:14px;padding:14px 20px;box-shadow:0 8px 30px rgba(0,0,0,.15);font-size:.92rem;font-weight:600;display:flex;align-items:center;gap:10px;animation:slideDown .3s ease;min-width:260px;text-align:center;border:1.5px solid #e2e8f0}
+.toast.success{border-color:#10b981;color:#064e3b;background:#f0fdf4}
+.toast.error{border-color:#ef4444;color:#7f1d1d;background:#fef2f2}
+.toast.info{border-color:#1a56a0;color:#0d2137;background:#eff6ff}
+@keyframes slideDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(13,33,55,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:24px;padding:36px 28px;width:100%;max-width:400px;box-shadow:0 24px 64px rgba(0,0,0,.2);animation:popIn .25s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.modal-icon{font-size:52px;text-align:center;margin-bottom:12px}
+.modal-title{font-size:1.2rem;font-weight:700;text-align:center;color:#0d2137;margin-bottom:6px}
+.modal-sub{font-size:.88rem;color:#64748b;text-align:center;margin-bottom:20px}
+.modal-input{width:100%;padding:13px 16px;border-radius:12px;border:2px solid #e2e8f0;font-size:1rem;font-family:'Cairo',inherit;outline:none;transition:border-color .2s}
+.modal-input:focus{border-color:#1a56a0;box-shadow:0 0 0 4px rgba(26,86,160,.1)}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions .btn{margin-top:0}
+
+/* Divider */
+.divider{border:none;border-top:1.5px solid #e2e8f0;margin:20px 0}
+
+/* Empty state */
+.empty-state{text-align:center;padding:30px;color:#94a3b8}
+.empty-state-icon{font-size:44px;margin-bottom:10px}
+
+/* Loading */
+.loading{text-align:center;padding:20px;color:#64748b;font-size:.9rem}
+.spinner{display:inline-block;width:22px;height:22px;border:3px solid #e2e8f0;border-top-color:#1a56a0;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive */
+@media(max-width:500px){
+  .portal-grid{grid-template-columns:1fr}
+  .card{padding:20px}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <img src="logo.png" alt="School Logo" class="school-logo">
+<div id="toast-container"></div>
 
-  <h1>🏫 الأجندة الإلكترونية</h1>
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">🔐</div>
+    <div class="modal-title" id="modalTitle">تسجيل الدخول</div>
+    <div class="modal-sub" id="modalSub">أدخل كلمة المرور للمتابعة</div>
+    <input class="modal-input" type="password" id="modalPassword" placeholder="كلمة المرور" autocomplete="current-password">
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitModal()">دخول</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <img src="logo.png" alt="شعار المدرسة" class="school-logo">
+  <h1>الأجندة الإلكترونية</h1>
   <p>مدرسة برج البراجنة الرسمية الأولى للصبيان</p>
-  <p>Borj El Barajneh First Official School for Boys</p>
+  <div class="header-badge">Borj El Barajneh First Official School for Boys</div>
 </header>
 
 <div class="container">
 
-<div id="home" class="active">
-<div class="portal-grid">
+  <!-- Home -->
+  <div id="home" class="active">
+    <div class="portal-grid">
 
-<div class="portal" onclick="openPortal('student')">
-<div class="icon">👨‍🎓</div>
-<h2>بوابة الطالب</h2>
-<p>الأجندة الخاصة بكل صف</p>
+      <div class="portal" onclick="openPortal('student')">
+        <span class="portal-icon">👨‍🎓</span>
+        <h2>بوابة الطالب</h2>
+        <p>تصفح الواجبات حسب الصف والمادة</p>
+        <span class="portal-badge">دخول مباشر</span>
+      </div>
+
+      <div class="portal" onclick="openPortal('teacher')">
+        <span class="portal-icon">👩‍🏫</span>
+        <h2>بوابة الأستاذ</h2>
+        <p>إضافة وإدارة الواجبات اليومية</p>
+        <span class="portal-badge">بكلمة مرور</span>
+      </div>
+
+      <div class="portal" onclick="openPortal('tech')">
+        <span class="portal-icon">⚙️</span>
+        <h2>البوابة التقنية</h2>
+        <p>إدارة المنصة والإعلانات</p>
+        <span class="portal-badge">بكلمة مرور</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Student Portal -->
+  <div id="student" class="screen">
+    <div class="section-header">
+      <button class="btn btn-back" onclick="goHome()">⬅ الرئيسية</button>
+      <h2 style="font-size:1.1rem;color:#0d2137">بوابة الطالب</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📚 اختر صفك</div>
+      <div class="card-subtitle">اختر الصف الدراسي ثم انقر على المادة لعرض الواجبات</div>
+
+      <div class="form-group">
+        <label>الصف الدراسي</label>
+        <select id="grade">
+          <option value="">-- اختر الصف --</option>
+          <option>الأول الأساسي</option>
+          <option>الثاني الأساسي</option>
+          <option>الثالث الأساسي</option>
+          <option>الرابع الأساسي</option>
+          <option>الخامس الأساسي</option>
+          <option>السادس الأساسي</option>
+          <option>السابع الأساسي</option>
+          <option>الثامن الأساسي</option>
+          <option>التاسع الأساسي</option>
+        </select>
+      </div>
+
+      <div id="announcementBanner" class="announcement-banner"></div>
+      <div id="subjects" class="subjects"></div>
+      <div id="agenda"></div>
+    </div>
+  </div>
+
+  <!-- Teacher Portal -->
+  <div id="teacher" class="screen">
+    <div class="section-header">
+      <button class="btn btn-back" onclick="goHome()">⬅ الرئيسية</button>
+      <h2 style="font-size:1.1rem;color:#0d2137">بوابة الأستاذ</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">➕ إضافة واجب جديد</div>
+      <div class="card-subtitle">أدخل تفاصيل الواجب وانقر على "حفظ الواجب"</div>
+
+      <div class="form-group">
+        <label>الصف الدراسي</label>
+        <select id="teacherGrade">
+          <option value="">-- اختر الصف --</option>
+          <option>الأول الأساسي</option>
+          <option>الثاني الأساسي</option>
+          <option>الثالث الأساسي</option>
+          <option>الرابع الأساسي</option>
+          <option>الخامس الأساسي</option>
+          <option>السادس الأساسي</option>
+          <option>السابع الأساسي</option>
+          <option>الثامن الأساسي</option>
+          <option>التاسع الأساسي</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>المادة</label>
+        <select id="teacherSubject">
+          <option value="">-- اختر المادة --</option>
+          <option>Math</option>
+          <option>Science</option>
+          <option>English</option>
+          <option>اللغة العربية</option>
+          <option>التربية المدنية</option>
+          <option>الجغرافيا</option>
+          <option>الفنون</option>
+          <option>التربية الدينية</option>
+          <option>Biology</option>
+          <option>Chemistry</option>
+          <option>Physics</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>تاريخ الواجب</label>
+        <input type="date" id="teacherDate">
+      </div>
+
+      <div class="form-group">
+        <label>نص الواجب أو الملاحظة</label>
+        <textarea id="teacherHomework" placeholder="اكتب الواجب أو الملاحظة هنا..."></textarea>
+      </div>
+
+      <button class="btn btn-primary" onclick="saveHomework()">💾 حفظ الواجب</button>
+    </div>
+  </div>
+
+  <!-- Tech Portal -->
+  <div id="tech" class="screen">
+    <div class="section-header">
+      <button class="btn btn-back" onclick="goHome()">⬅ الرئيسية</button>
+      <h2 style="font-size:1.1rem;color:#0d2137">البوابة التقنية</h2>
+    </div>
+
+    <!-- Manage Homeworks -->
+    <div class="card">
+      <div class="card-title">📋 إدارة الواجبات</div>
+      <div class="card-subtitle">عرض جميع الواجبات المحفوظة وحذف أي واجب</div>
+      <button class="btn btn-primary" onclick="loadAllHomeworks()">🔄 تحميل جميع الواجبات</button>
+      <div id="allHomeworks" style="margin-top:16px"></div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="card">
+      <div class="card-title">📢 إدارة الإعلانات</div>
+      <div class="card-subtitle">الإعلانات تظهر لجميع الطلاب عند فتح بوابتهم</div>
+      <div class="form-group">
+        <label>نص الإعلان</label>
+        <textarea id="announcementText" placeholder="اكتب الإعلان هنا..." rows="3"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveAnnouncement()">📤 نشر الإعلان</button>
+      <button class="btn btn-danger" onclick="deleteAnnouncement()">🗑️ حذف الإعلان الحالي</button>
+      <div id="currentAnnouncement" style="margin-top:16px"></div>
+    </div>
+
+    <!-- Change Passwords -->
+    <div class="card">
+      <div class="card-title">🔑 تغيير كلمات المرور</div>
+      <div class="card-subtitle">تحديث كلمات مرور البوابات المحمية</div>
+
+      <div class="form-group">
+        <label>كلمة مرور الأستاذ الجديدة</label>
+        <input type="password" id="newTeacherPass" placeholder="أدخل كلمة مرور الأستاذ">
+      </div>
+      <button class="btn btn-primary" onclick="changeTeacherPass()">💾 حفظ كلمة مرور الأستاذ</button>
+
+      <hr class="divider">
+
+      <div class="form-group">
+        <label>كلمة مرور البوابة التقنية الجديدة</label>
+        <input type="password" id="newTechPass" placeholder="أدخل كلمة مرور التقنية">
+      </div>
+      <button class="btn btn-primary" onclick="changeTechPass()">💾 حفظ كلمة مرور التقنية</button>
+    </div>
+
+  </div>
+
 </div>
 
-<div class="portal" onclick="openPortal('teacher')">
-<div class="icon">👩‍🏫</div>
-<h2>بوابة الأستاذ</h2>
-<p>إضافة الواجبات والإعلانات</p>
-</div>
-
-<div class="portal" onclick="openPortal('tech')">
-<div class="icon">💻</div>
-<h2>البوابة التقنية</h2>
-<p>إدارة المنصة</p>
-</div>
-
-</div>
-</div>
-
-<div id="student" class="screen">
-<button class="back" onclick="goHome()">⬅ العودة</button>
-
-<div class="card">
-<h2>👨‍🎓 بوابة الطالب</h2>
-
-<select id="grade">
-<option value="">-- اختر الصف --</option>
-<option>الأول الأساسي</option>
-<option>الثاني الأساسي</option>
-<option>الثالث الأساسي</option>
-<option>الرابع الأساسي</option>
-<option>الخامس الأساسي</option>
-<option>السادس الأساسي</option>
-<option>السابع الأساسي</option>
-<option>الثامن الأساسي</option>
-<option>التاسع الأساسي</option>
-</select>
-
-<div id="announcementBanner" style="display:none;background:#fef3c7;border-right:5px solid #f59e0b;border-radius:12px;padding:14px;margin-top:14px;font-size:15px"></div>
-<div id="subjects" class="subjects"></div>
-<div id="agenda"></div>
-
-</div>
-</div>
-
-
-<div id="teacher" class="screen">
-<button class="back" onclick="goHome()">⬅ العودة</button>
-<div class="card">
-<h2>👩‍🏫 بوابة الأستاذ</h2>
-<p class="small">إضافة واجبات الصفوف</p>
-
-<select id="teacherGrade">
-<option value="">-- اختر الصف --</option>
-<option>الأول الأساسي</option>
-<option>الثاني الأساسي</option>
-<option>الثالث الأساسي</option>
-<option>الرابع الأساسي</option>
-<option>الخامس الأساسي</option>
-<option>السادس الأساسي</option>
-<option>السابع الأساسي</option>
-<option>الثامن الأساسي</option>
-<option>التاسع الأساسي</option>
-</select>
-
-<select id="teacherSubject">
-<option value="">-- اختر المادة --</option>
-<option>Math</option>
-<option>Science</option>
-<option>English</option>
-<option>اللغة العربية</option>
-<option>التربية المدنية</option>
-<option>الجغرافيا</option>
-<option>الفنون</option>
-<option>التربية الدينية</option>
-<option>Biology</option>
-<option>Chemistry</option>
-<option>Physics</option>
-</select>
-
-<input type="date" id="teacherDate">
-<textarea id="teacherHomework" placeholder="اكتب الواجب أو الملاحظة"></textarea>
-<button onclick="saveHomework()">➕ حفظ الواجب</button>
-<button class="back">✏️ تعديل واجب</button>
-<button class="back">🗑️ حذف واجب</button>
-
-<div class="entry" style="margin-top:20px">
-📌 سيتم عرض واجبات الصف والمادة هنا بعد ربط Firebase.
-</div>
-
-</div>
-</div>
-
-<div id="tech" class="screen">
-<button class="back" onclick="goHome()">⬅ العودة</button>
-
-<!-- 1. عرض وحذف الواجبات -->
-<div class="card">
-  <h2>📋 إدارة الواجبات</h2>
-  <p class="small">عرض جميع الواجبات المحفوظة وحذف أي واجب</p>
-  <button onclick="loadAllHomeworks()" style="margin-top:12px">🔄 تحميل جميع الواجبات</button>
-  <div id="allHomeworks"></div>
-</div>
-
-<!-- 2. تغيير كلمات المرور -->
-<div class="card">
-  <h2>🔑 تغيير كلمات المرور</h2>
-  <p class="small">تغيير كلمة مرور بوابة الأستاذ</p>
-  <input type="password" id="newTeacherPass" placeholder="كلمة مرور الأستاذ الجديدة">
-  <button onclick="changeTeacherPass()">💾 حفظ كلمة مرور الأستاذ</button>
-  <p class="small" style="margin-top:16px">تغيير كلمة مرور البوابة التقنية</p>
-  <input type="password" id="newTechPass" placeholder="كلمة مرور التقنية الجديدة">
-  <button onclick="changeTechPass()">💾 حفظ كلمة مرور التقنية</button>
-</div>
-
-<!-- 3. إدارة الإعلانات -->
-<div class="card">
-  <h2>📢 إدارة الإعلانات</h2>
-  <p class="small">الإعلانات تظهر لجميع الطلاب عند فتح بوابتهم</p>
-  <textarea id="announcementText" placeholder="اكتب الإعلان هنا..." rows="3"></textarea>
-  <button onclick="saveAnnouncement()">📤 نشر الإعلان</button>
-  <button onclick="deleteAnnouncement()" style="background:#ef4444;margin-top:8px">🗑️ حذف الإعلان الحالي</button>
-  <div id="currentAnnouncement" style="margin-top:12px"></div>
-</div>
-
-</div>
-
-</div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script>
@@ -200,6 +332,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let passwords = { teacher: "Teacher2026", tech: "Tech2026" };
+let pendingPortal = null;
 
 async function loadPasswords() {
   try {
@@ -209,179 +342,240 @@ async function loadPasswords() {
 }
 loadPasswords();
 
+// ===== Toast Notifications =====
+function showToast(message, type = 'info', duration = 3000) {
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'slideDown .3s ease reverse';
+    setTimeout(() => toast.remove(), 280);
+  }, duration);
+}
+
+// ===== Modal =====
+function openModal(icon, title, sub, onSubmit) {
+  document.getElementById('modalIcon').textContent = icon;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalSub').textContent = sub;
+  document.getElementById('modalPassword').value = '';
+  document.getElementById('loginModal').classList.add('open');
+  document.getElementById('modalPassword').focus();
+  window._modalSubmit = onSubmit;
+}
+
+function closeModal() {
+  document.getElementById('loginModal').classList.remove('open');
+  document.getElementById('modalPassword').value = '';
+  pendingPortal = null;
+}
+
+function submitModal() {
+  const pass = document.getElementById('modalPassword').value;
+  if (window._modalSubmit) window._modalSubmit(pass);
+}
+
+document.getElementById('modalPassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitModal();
+});
+
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ===== Navigation =====
+function openPortal(id) {
+  if (id === 'teacher') {
+    openModal('👩‍🏫', 'بوابة الأستاذ', 'أدخل كلمة مرور بوابة الأستاذ للمتابعة', (pass) => {
+      if (pass !== passwords.teacher) {
+        showToast('كلمة المرور غير صحيحة', 'error');
+        return;
+      }
+      closeModal();
+      showScreen('teacher');
+    });
+    return;
+  }
+  if (id === 'tech') {
+    openModal('⚙️', 'البوابة التقنية', 'أدخل كلمة مرور البوابة التقنية للمتابعة', (pass) => {
+      if (pass !== passwords.tech) {
+        showToast('كلمة المرور غير صحيحة', 'error');
+        return;
+      }
+      closeModal();
+      showScreen('tech');
+      loadAllHomeworks();
+      loadCurrentAnnouncement();
+    });
+    return;
+  }
+  if (id === 'student') {
+    loadAnnouncementBanner();
+    showScreen('student');
+  }
+}
+
+function showScreen(id) {
+  document.getElementById('home').style.display = 'none';
+  document.querySelectorAll('.screen').forEach(x => x.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  document.getElementById('home').style.display = 'block';
+  document.querySelectorAll('.screen').forEach(x => x.style.display = 'none');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== Student Portal =====
 async function loadAnnouncementBanner() {
   try {
     const doc = await db.collection("settings").doc("announcement").get();
     const banner = document.getElementById("announcementBanner");
     if (doc.exists && doc.data().text) {
       banner.style.display = "block";
-      banner.innerHTML = "📢 <strong>إعلان:</strong> " + doc.data().text;
+      banner.innerHTML = `📢 <strong>إعلان:</strong> ${doc.data().text}`;
     }
   } catch(e) {}
 }
 
-function openPortal(id){
-  if(id === "teacher"){
-      const p = prompt("🔐 أدخلي كلمة مرور بوابة الأستاذ:");
-      if(p !== passwords.teacher){
-          alert("❌ كلمة مرور الأستاذ غير صحيحة");
-          return;
-      }
-  }
-
-  if(id === "tech"){
-      const p = prompt("🔐 أدخلي كلمة مرور البوابة التقنية:");
-      if(p !== passwords.tech){
-          alert("❌ كلمة مرور البوابة التقنية غير صحيحة");
-          return;
-      }
-      loadAllHomeworks();
-      loadCurrentAnnouncement();
-  }
-
-  if(id === "student"){
-      loadAnnouncementBanner();
-  }
-
-  document.getElementById("home").style.display="none";
-  document.querySelectorAll(".screen").forEach(x=>x.style.display="none");
-  document.getElementById(id).style.display="block";
-}
-
-function goHome(){
-document.getElementById("home").style.display="block";
-document.querySelectorAll(".screen").forEach(x=>x.style.display="none");
-}
-
-const materials=[
-["➕","Math"],
-["🔬","Science"],
-["🔤","English"],
-["🏛️","التربية المدنية"],
-["📖","اللغة العربية"],
-["🌍","الجغرافيا"],
-["🎨","الفنون"],
-["☪️","التربية الدينية"]
+const materials = [
+  ["➕", "Math"],
+  ["🔬", "Science"],
+  ["🔤", "English"],
+  ["🏛️", "التربية المدنية"],
+  ["📖", "اللغة العربية"],
+  ["🌍", "الجغرافيا"],
+  ["🎨", "الفنون"],
+  ["☪️", "التربية الدينية"]
 ];
-const materialsAdvanced=[
-["🧬","Biology"],
-["⚗️","Chemistry"],
-["⚛️","Physics"]
+const materialsAdvanced = [
+  ["🧬", "Biology"],
+  ["⚗️", "Chemistry"],
+  ["⚛️", "Physics"]
 ];
-const advancedGrades=["السابع الأساسي","الثامن الأساسي","التاسع الأساسي"];
-const grade = document.getElementById("grade");
-const subjects = document.getElementById("subjects");
-const agenda = document.getElementById("agenda");
-grade.addEventListener("change",function(){
-subjects.innerHTML="";
-agenda.innerHTML="";
+const advancedGrades = ["السابع الأساسي", "الثامن الأساسي", "التاسع الأساسي"];
 
-if(this.value==="") return;
+document.getElementById("grade").addEventListener("change", function() {
+  const subjects = document.getElementById("subjects");
+  const agenda = document.getElementById("agenda");
+  subjects.innerHTML = "";
+  agenda.innerHTML = "";
+  if (!this.value) return;
 
-const list = advancedGrades.includes(this.value)
-  ? [...materials.filter(m=>m[1]!=="Science"), ...materialsAdvanced]
-  : materials;
+  const list = advancedGrades.includes(this.value)
+    ? [...materials.filter(m => m[1] !== "Science"), ...materialsAdvanced]
+    : materials;
 
-list.forEach(m=>{
-const box=document.createElement("div");
-box.className="subject";
-box.innerHTML="<div style='font-size:35px'>"+m[0]+"</div>"+m[1];
-
-box.onclick = async function () {
-  const snapshot = await db.collection("homeworks")
-    .where("grade", "==", grade.value)
-    .where("subject", "==", m[1])
-    .get();
-
-  if (snapshot.empty) {
-    agenda.innerHTML = `
-      <div class="card">
-        <h3>${m[1]} - ${grade.value}</h3>
-        <div class="entry">
-          📅 لا توجد واجبات مضافة بعد.<br>
-          📝 ستظهر أجندة هذا الصف وهذه المادة هنا.
-        </div>
-      </div>`;
-    return;
-  }
-
-  let html = `<div class="card"><h3>${m[1]} - ${grade.value}</h3>`;
-
-  snapshot.forEach(doc => {
-    const d = doc.data();
-    html += `
-      <div class="entry">
-        📅 ${d.date}<br>
-        📝 ${d.homework}
-      </div>`;
+  list.forEach(m => {
+    const box = document.createElement("div");
+    box.className = "subject";
+    box.innerHTML = `<span class="subject-icon">${m[0]}</span><div class="subject-name">${m[1]}</div>`;
+    box.onclick = () => loadSubjectHomework(m[1], this.value, m[0]);
+    subjects.appendChild(box);
   });
-
-  html += `</div>`;
-  agenda.innerHTML = html;
-  window.scrollTo({
-    top: agenda.offsetTop,
-    behavior: "smooth"
-  });
-};
-
-subjects.appendChild(box);
-});
 });
 
+async function loadSubjectHomework(subject, grade, icon) {
+  const agenda = document.getElementById("agenda");
+  agenda.innerHTML = `<div class="loading">⏳ جاري التحميل...<span class="spinner"></span></div>`;
+  try {
+    const snapshot = await db.collection("homeworks")
+      .where("grade", "==", grade)
+      .where("subject", "==", subject)
+      .get();
+
+    if (snapshot.empty) {
+      agenda.innerHTML = `
+        <div class="card">
+          <div class="card-title">${icon} ${subject} — ${grade}</div>
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div>لا توجد واجبات مضافة بعد</div>
+          </div>
+        </div>`;
+    } else {
+      const docs = [];
+      snapshot.forEach(doc => docs.push(doc.data()));
+      docs.sort((a, b) => b.date.localeCompare(a.date));
+
+      let html = `<div class="card"><div class="card-title">${icon} ${subject} — ${grade}</div>`;
+      docs.forEach(d => {
+        html += `
+          <div class="entry">
+            <div class="entry-meta">📅 ${formatDate(d.date)}</div>
+            <div class="entry-text">📝 ${d.homework}</div>
+          </div>`;
+      });
+      html += `</div>`;
+      agenda.innerHTML = html;
+    }
+    agenda.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch(e) {
+    agenda.innerHTML = `<div class="entry" style="border-color:#ef4444">❌ حدث خطأ في التحميل</div>`;
+  }
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+// ===== Teacher Portal =====
 async function saveHomework() {
   const grade = document.getElementById("teacherGrade").value;
   const subject = document.getElementById("teacherSubject").value;
   const date = document.getElementById("teacherDate").value;
-  const homework = document.getElementById("teacherHomework").value;
+  const homework = document.getElementById("teacherHomework").value.trim();
 
   if (!grade || !subject || !date || !homework) {
-    alert("يرجى تعبئة جميع الحقول");
+    showToast('يرجى تعبئة جميع الحقول', 'error');
     return;
   }
 
   try {
-    await db.collection("homeworks").add({
-      grade: grade,
-      subject: subject,
-      date: date,
-      homework: homework
-    });
-
-    alert("✅ تم حفظ الواجب بنجاح");
+    await db.collection("homeworks").add({ grade, subject, date, homework });
+    showToast('تم حفظ الواجب بنجاح', 'success');
     document.getElementById("teacherHomework").value = "";
-  } catch (e) {
-    console.error(e);
-    alert("❌ حدث خطأ أثناء الحفظ");
+    document.getElementById("teacherDate").value = "";
+  } catch(e) {
+    showToast('حدث خطأ أثناء الحفظ', 'error');
   }
 }
 
-// ===== البوابة التقنية =====
-
+// ===== Tech Portal =====
 async function loadAllHomeworks() {
   const container = document.getElementById("allHomeworks");
-  container.innerHTML = "<p style='color:#64748b;margin-top:10px'>⏳ جاري التحميل...</p>";
+  container.innerHTML = `<div class="loading">⏳ جاري التحميل...<span class="spinner"></span></div>`;
   try {
-    const snapshot = await db.collection("homeworks").orderBy("date","desc").get();
+    const snapshot = await db.collection("homeworks").orderBy("date", "desc").get();
     if (snapshot.empty) {
-      container.innerHTML = "<div class='entry'>لا توجد واجبات محفوظة.</div>";
+      container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div>لا توجد واجبات محفوظة</div></div>`;
       return;
     }
     let html = "";
     snapshot.forEach(doc => {
       const d = doc.data();
       html += `
-        <div class='entry' style='display:flex;justify-content:space-between;align-items:flex-start;gap:10px'>
-          <div>
-            <strong>${d.grade} — ${d.subject}</strong><br>
-            📅 ${d.date}<br>
-            📝 ${d.homework}
+        <div class="entry">
+          <div class="entry-row">
+            <div>
+              <div style="font-weight:700;margin-bottom:4px">${d.grade} — ${d.subject}</div>
+              <div class="entry-meta">📅 ${formatDate(d.date)}</div>
+              <div class="entry-text" style="margin-top:4px">📝 ${d.homework}</div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="deleteHomework('${doc.id}')">🗑️ حذف</button>
           </div>
-          <button onclick="deleteHomework('${doc.id}')" style='width:auto;padding:8px 14px;background:#ef4444;border-radius:10px;white-space:nowrap'>🗑️ حذف</button>
         </div>`;
     });
     container.innerHTML = html;
   } catch(e) {
-    container.innerHTML = "<div class='entry'>❌ حدث خطأ في التحميل.</div>";
+    container.innerHTML = `<div class="entry" style="border-color:#ef4444">❌ حدث خطأ في التحميل</div>`;
   }
 }
 
@@ -389,53 +583,53 @@ async function deleteHomework(id) {
   if (!confirm("هل أنت متأكد من حذف هذا الواجب؟")) return;
   try {
     await db.collection("homeworks").doc(id).delete();
-    alert("✅ تم حذف الواجب");
+    showToast('تم حذف الواجب', 'success');
     loadAllHomeworks();
   } catch(e) {
-    alert("❌ حدث خطأ أثناء الحذف");
+    showToast('حدث خطأ أثناء الحذف', 'error');
   }
 }
 
 async function changeTeacherPass() {
   const np = document.getElementById("newTeacherPass").value.trim();
-  if (!np) { alert("أدخل كلمة مرور جديدة"); return; }
+  if (!np) { showToast('أدخل كلمة مرور جديدة', 'error'); return; }
   try {
     await db.collection("settings").doc("passwords").set({ teacher: np }, { merge: true });
     passwords.teacher = np;
-    alert("✅ تم تغيير كلمة مرور الأستاذ");
+    showToast('تم تغيير كلمة مرور الأستاذ', 'success');
     document.getElementById("newTeacherPass").value = "";
-  } catch(e) { alert("❌ حدث خطأ"); }
+  } catch(e) { showToast('حدث خطأ', 'error'); }
 }
 
 async function changeTechPass() {
   const np = document.getElementById("newTechPass").value.trim();
-  if (!np) { alert("أدخل كلمة مرور جديدة"); return; }
+  if (!np) { showToast('أدخل كلمة مرور جديدة', 'error'); return; }
   try {
     await db.collection("settings").doc("passwords").set({ tech: np }, { merge: true });
     passwords.tech = np;
-    alert("✅ تم تغيير كلمة مرور البوابة التقنية");
+    showToast('تم تغيير كلمة مرور البوابة التقنية', 'success');
     document.getElementById("newTechPass").value = "";
-  } catch(e) { alert("❌ حدث خطأ"); }
+  } catch(e) { showToast('حدث خطأ', 'error'); }
 }
 
 async function saveAnnouncement() {
   const text = document.getElementById("announcementText").value.trim();
-  if (!text) { alert("اكتب نص الإعلان أولاً"); return; }
+  if (!text) { showToast('اكتب نص الإعلان أولاً', 'error'); return; }
   try {
     await db.collection("settings").doc("announcement").set({ text });
-    alert("✅ تم نشر الإعلان");
+    showToast('تم نشر الإعلان', 'success');
     loadCurrentAnnouncement();
     document.getElementById("announcementText").value = "";
-  } catch(e) { alert("❌ حدث خطأ"); }
+  } catch(e) { showToast('حدث خطأ', 'error'); }
 }
 
 async function deleteAnnouncement() {
   if (!confirm("هل تريد حذف الإعلان الحالي؟")) return;
   try {
     await db.collection("settings").doc("announcement").delete();
-    alert("✅ تم حذف الإعلان");
+    showToast('تم حذف الإعلان', 'success');
     document.getElementById("currentAnnouncement").innerHTML = "";
-  } catch(e) { alert("❌ حدث خطأ"); }
+  } catch(e) { showToast('حدث خطأ', 'error'); }
 }
 
 async function loadCurrentAnnouncement() {
@@ -443,13 +637,12 @@ async function loadCurrentAnnouncement() {
     const doc = await db.collection("settings").doc("announcement").get();
     const div = document.getElementById("currentAnnouncement");
     if (doc.exists && doc.data().text) {
-      div.innerHTML = `<div class='entry' style='background:#fef3c7;border-color:#f59e0b'>📢 <strong>الإعلان الحالي:</strong> ${doc.data().text}</div>`;
+      div.innerHTML = `<div class="announcement-banner" style="display:block">📢 <strong>الإعلان الحالي:</strong> ${doc.data().text}</div>`;
     } else {
-      div.innerHTML = "<div class='entry'>لا يوجد إعلان حالياً.</div>";
+      div.innerHTML = `<div class="empty-state" style="padding:16px"><div>لا يوجد إعلان حالياً</div></div>`;
     }
   } catch(e) {}
 }
-
 </script>
 
 </body>
