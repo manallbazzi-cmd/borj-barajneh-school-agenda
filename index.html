@@ -469,7 +469,7 @@ function renderCalendar() {
   }
 
   container.innerHTML = `
-    <div class="card">
+    <div class="card" dir="ltr">
       <div class="cal-nav">
         <button onclick="changeCalendarMonth(-1)">◀ Previous</button>
         <h3>📅 ${calendarTitle} — ${monthNames[calendarMonth]} ${calendarYear}</h3>
