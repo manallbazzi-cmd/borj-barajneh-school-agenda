@@ -352,6 +352,8 @@ document.getElementById("calendarView").innerHTML="";
 
 if(this.value==="") return;
 
+loadAllGradeHomeworks(this.value);
+
 const list = advancedGrades.includes(this.value)
   ? [...materials.filter(m=>m[1]!=="Science"), ...materialsAdvanced]
   : materials;
@@ -413,6 +415,39 @@ box.onclick = async function () {
 subjects.appendChild(box);
 });
 });
+
+async function loadAllGradeHomeworks(gradeValue) {
+  agenda.innerHTML = "<p class='small'>⏳ جاري تحميل واجبات الصف...</p>";
+  try {
+    const snapshot = await db.collection("homeworks").where("grade", "==", gradeValue).get();
+    const docs = [];
+    snapshot.forEach(doc => docs.push(doc.data()));
+    docs.sort((a, b) => (a.date < b.date ? 1 : -1));
+
+    if (!docs.length) {
+      agenda.innerHTML = `
+        <div class="card">
+          <h3>📋 جميع واجبات ${gradeValue}</h3>
+          <div class="entry">لا توجد واجبات مضافة بعد لهذا الصف.</div>
+        </div>`;
+      return;
+    }
+
+    let html = `<div class="card"><h3>📋 جميع واجبات ${gradeValue}</h3>`;
+    docs.forEach(d => {
+      html += `
+        <div class="entry">
+          <strong>${d.subject}</strong><br>
+          📅 ${d.date}<br>
+          📝 ${d.homework}
+        </div>`;
+    });
+    html += `</div>`;
+    agenda.innerHTML = html;
+  } catch(e) {
+    agenda.innerHTML = "<div class='entry'>❌ حدث خطأ في تحميل الواجبات.</div>";
+  }
+}
 
 let calendarData = {};
 let calendarYear, calendarMonth;
