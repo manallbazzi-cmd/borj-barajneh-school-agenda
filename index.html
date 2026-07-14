@@ -456,8 +456,8 @@ let calendarTitle = "";
 function renderCalendar() {
   const container = document.getElementById("calendarView");
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const firstWeekday = new Date(calendarYear, calendarMonth, 1).getDay();
+  const dayNames = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const firstWeekday = (new Date(calendarYear, calendarMonth, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
 
   let cells = "";
