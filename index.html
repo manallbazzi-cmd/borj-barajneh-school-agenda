@@ -139,11 +139,9 @@ box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
 <textarea id="teacherHomework" placeholder="اكتب الواجب أو الملاحظة"></textarea>
 <button onclick="saveHomework()">➕ حفظ الواجب</button>
 <button class="back">✏️ تعديل واجب</button>
-<button class="back">🗑️ حذف واجب</button>
+<button class="back" onclick="loadTeacherHomeworks()">🗑️ حذف واجب</button>
 
-<div class="entry" style="margin-top:20px">
-📌 سيتم عرض واجبات الصف والمادة هنا بعد ربط Firebase.
-</div>
+<div id="teacherHomeworkList" style="margin-top:20px"></div>
 
 </div>
 </div>
@@ -354,9 +352,61 @@ async function saveHomework() {
 
     alert("✅ تم حفظ الواجب بنجاح");
     document.getElementById("teacherHomework").value = "";
+    loadTeacherHomeworks();
   } catch (e) {
     console.error(e);
     alert("❌ حدث خطأ أثناء الحفظ");
+  }
+}
+
+async function loadTeacherHomeworks() {
+  const grade = document.getElementById("teacherGrade").value;
+  const subject = document.getElementById("teacherSubject").value;
+  const container = document.getElementById("teacherHomeworkList");
+
+  if (!grade || !subject) {
+    alert("يرجى اختيار الصف والمادة أولاً");
+    return;
+  }
+
+  container.innerHTML = "<p style='color:#64748b'>⏳ جاري التحميل...</p>";
+  try {
+    const snapshot = await db.collection("homeworks")
+      .where("grade", "==", grade)
+      .where("subject", "==", subject)
+      .get();
+
+    if (snapshot.empty) {
+      container.innerHTML = "<div class='entry'>لا توجد واجبات لهذا الصف والمادة.</div>";
+      return;
+    }
+
+    let html = "";
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      html += `
+        <div class='entry' style='display:flex;justify-content:space-between;align-items:flex-start;gap:10px'>
+          <div>
+            📅 ${d.date}<br>
+            📝 ${d.homework}
+          </div>
+          <button onclick="deleteTeacherHomework('${doc.id}')" style='width:auto;padding:8px 14px;background:#ef4444;border-radius:10px;white-space:nowrap'>🗑️ حذف</button>
+        </div>`;
+    });
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = "<div class='entry'>❌ حدث خطأ في التحميل.</div>";
+  }
+}
+
+async function deleteTeacherHomework(id) {
+  if (!confirm("هل أنت متأكد من حذف هذا الواجب؟")) return;
+  try {
+    await db.collection("homeworks").doc(id).delete();
+    alert("✅ تم حذف الواجب");
+    loadTeacherHomeworks();
+  } catch(e) {
+    alert("❌ حدث خطأ أثناء الحذف");
   }
 }
 
