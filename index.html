@@ -173,17 +173,6 @@ border-radius:50px;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);font-size:1
 
 <select id="teacherSubject">
 <option value="">-- اختر المادة --</option>
-<option>Math</option>
-<option>Science</option>
-<option>English</option>
-<option>اللغة العربية</option>
-<option>التربية المدنية</option>
-<option>الجغرافيا</option>
-<option>الفنون</option>
-<option>التربية الدينية</option>
-<option>Biology</option>
-<option>Chemistry</option>
-<option>Physics</option>
 </select>
 
 <input type="date" id="teacherDate">
@@ -380,6 +369,29 @@ box.onclick = async function () {
 
 subjects.appendChild(box);
 });
+});
+
+const teacherGradeSelect = document.getElementById("teacherGrade");
+const teacherSubjectSelect = document.getElementById("teacherSubject");
+
+function populateTeacherSubjects(selectedGrade) {
+  teacherSubjectSelect.innerHTML = '<option value="">-- اختر المادة --</option>';
+  if (!selectedGrade) return;
+
+  const list = advancedGrades.includes(selectedGrade)
+    ? [...materials.filter(m=>m[1]!=="Science"), ...materialsAdvanced]
+    : materials;
+
+  list.forEach(m=>{
+    const opt = document.createElement("option");
+    opt.value = m[1];
+    opt.textContent = m[1];
+    teacherSubjectSelect.appendChild(opt);
+  });
+}
+
+teacherGradeSelect.addEventListener("change", function(){
+  populateTeacherSubjects(this.value);
 });
 
 async function saveHomework() {
