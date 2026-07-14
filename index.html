@@ -71,6 +71,15 @@ button:active{transform:scale(.98)}
 box-shadow:0 4px 12px rgba(13,33,55,.06);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
 .subject:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(13,33,55,.14)}
 .entry{background:var(--entry-bg);border-right:5px solid var(--blue);padding:15px;border-radius:12px;margin-top:12px;animation:fadeIn .3s ease;transition:background .2s ease}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cal-nav button{width:auto;padding:8px 16px;margin:0}
+.cal-nav h3{margin:0;font-size:17px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px;text-align:center}
+.cal-head{font-weight:700;color:var(--slate);font-size:13px;padding:4px 0}
+.cal-cell{padding:10px 4px;border-radius:10px;font-size:14px;background:var(--entry-bg)}
+.cal-cell.empty{background:transparent}
+.cal-cell.has-hw{cursor:pointer;background:var(--blue);color:#fff;font-weight:700;transition:background .2s ease}
+.cal-cell.has-hw:hover{background:var(--blue-light)}
 .back{background:var(--slate)}
 .back:hover{background:#4b5768}
 .small{color:var(--slate)}
@@ -147,6 +156,7 @@ border-radius:50px;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);font-size:1
 <div id="announcementBanner" style="display:none;background:#fef3c7;border-right:5px solid #f59e0b;border-radius:12px;padding:14px;margin-top:14px;font-size:15px"></div>
 <div id="subjects" class="subjects"></div>
 <div id="agenda"></div>
+<div id="calendarView"></div>
 
 </div>
 </div>
@@ -194,6 +204,26 @@ border-radius:50px;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);font-size:1
   <h2>📋 إدارة الواجبات</h2>
   <p class="small">عرض جميع الواجبات المحفوظة وحذف أي واجب</p>
   <button onclick="loadAllHomeworks()" style="margin-top:12px">🔄 تحميل جميع الواجبات</button>
+
+  <div id="hwFilters" style="display:none">
+    <input type="text" id="hwSearch" placeholder="🔍 ابحث في نص الواجب..." oninput="renderFilteredHomeworks()">
+    <select id="hwFilterGrade" onchange="renderFilteredHomeworks()">
+      <option value="">-- كل الصفوف --</option>
+      <option>الأول الأساسي</option>
+      <option>الثاني الأساسي</option>
+      <option>الثالث الأساسي</option>
+      <option>الرابع الأساسي</option>
+      <option>الخامس الأساسي</option>
+      <option>السادس الأساسي</option>
+      <option>السابع الأساسي</option>
+      <option>الثامن الأساسي</option>
+      <option>التاسع الأساسي</option>
+    </select>
+    <select id="hwFilterSubject" onchange="renderFilteredHomeworks()">
+      <option value="">-- كل المواد --</option>
+    </select>
+  </div>
+
   <div id="allHomeworks"></div>
 </div>
 
@@ -318,6 +348,7 @@ const agenda = document.getElementById("agenda");
 grade.addEventListener("change",function(){
 subjects.innerHTML="";
 agenda.innerHTML="";
+document.getElementById("calendarView").innerHTML="";
 
 if(this.value==="") return;
 
@@ -335,6 +366,18 @@ box.onclick = async function () {
     .where("grade", "==", grade.value)
     .where("subject", "==", m[1])
     .get();
+
+  calendarData = {};
+  snapshot.forEach(doc => {
+    const d = doc.data();
+    if (!calendarData[d.date]) calendarData[d.date] = [];
+    calendarData[d.date].push(d);
+  });
+  const today = new Date();
+  calendarYear = today.getFullYear();
+  calendarMonth = today.getMonth();
+  calendarTitle = `${m[1]} - ${grade.value}`;
+  renderCalendar();
 
   if (snapshot.empty) {
     agenda.innerHTML = `
@@ -370,6 +413,55 @@ box.onclick = async function () {
 subjects.appendChild(box);
 });
 });
+
+let calendarData = {};
+let calendarYear, calendarMonth;
+let calendarTitle = "";
+
+function renderCalendar() {
+  const container = document.getElementById("calendarView");
+  const monthNames = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+  const dayNames = ["أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"];
+  const firstWeekday = new Date(calendarYear, calendarMonth, 1).getDay();
+  const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+
+  let cells = "";
+  for (let i = 0; i < firstWeekday; i++) cells += `<div class="cal-cell empty"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const hasHw = calendarData[dateStr];
+    cells += `<div class="cal-cell${hasHw ? " has-hw" : ""}" ${hasHw ? `onclick="showCalendarDay('${dateStr}')"` : ""}>${day}</div>`;
+  }
+
+  container.innerHTML = `
+    <div class="card">
+      <div class="cal-nav">
+        <button onclick="changeCalendarMonth(-1)">◀ السابق</button>
+        <h3>📅 ${calendarTitle} — ${monthNames[calendarMonth]} ${calendarYear}</h3>
+        <button onclick="changeCalendarMonth(1)">التالي ▶</button>
+      </div>
+      <div class="cal-grid">
+        ${dayNames.map(n => `<div class="cal-head">${n}</div>`).join("")}
+        ${cells}
+      </div>
+      <div id="calendarDayDetail"></div>
+    </div>`;
+}
+
+function changeCalendarMonth(delta) {
+  calendarMonth += delta;
+  if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+  if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+  renderCalendar();
+}
+
+function showCalendarDay(dateStr) {
+  const items = calendarData[dateStr] || [];
+  const detail = document.getElementById("calendarDayDetail");
+  if (!items.length) { detail.innerHTML = ""; return; }
+  detail.innerHTML = `<h4 style="margin-top:16px">📌 واجبات ${dateStr}</h4>` +
+    items.map(d => `<div class="entry">📝 ${d.homework}</div>`).join("");
+}
 
 const teacherGradeSelect = document.getElementById("teacherGrade");
 const teacherSubjectSelect = document.getElementById("teacherSubject");
@@ -504,32 +596,70 @@ async function deleteTeacherHomework(id) {
 
 // ===== البوابة التقنية =====
 
+function populateHwFilterSubjects() {
+  const sel = document.getElementById("hwFilterSubject");
+  [...materials, ...materialsAdvanced].forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m[1];
+    opt.textContent = m[1];
+    sel.appendChild(opt);
+  });
+}
+populateHwFilterSubjects();
+
+let allHomeworksCache = [];
+
 async function loadAllHomeworks() {
   const container = document.getElementById("allHomeworks");
   container.innerHTML = "<p style='color:#64748b;margin-top:10px'>⏳ جاري التحميل...</p>";
   try {
     const snapshot = await db.collection("homeworks").orderBy("date","desc").get();
-    if (snapshot.empty) {
-      container.innerHTML = "<div class='entry'>لا توجد واجبات محفوظة.</div>";
-      return;
-    }
-    let html = "";
-    snapshot.forEach(doc => {
-      const d = doc.data();
-      html += `
-        <div class='entry' style='display:flex;justify-content:space-between;align-items:flex-start;gap:10px'>
-          <div>
-            <strong>${d.grade} — ${d.subject}</strong><br>
-            📅 ${d.date}<br>
-            📝 ${d.homework}
-          </div>
-          <button onclick="deleteHomework('${doc.id}')" style='width:auto;padding:8px 14px;background:#ef4444;border-radius:10px;white-space:nowrap'>🗑️ حذف</button>
-        </div>`;
-    });
-    container.innerHTML = html;
+    allHomeworksCache = [];
+    snapshot.forEach(doc => allHomeworksCache.push({ id: doc.id, ...doc.data() }));
+    document.getElementById("hwFilters").style.display = allHomeworksCache.length ? "block" : "none";
+    renderFilteredHomeworks();
   } catch(e) {
     container.innerHTML = "<div class='entry'>❌ حدث خطأ في التحميل.</div>";
   }
+}
+
+function renderFilteredHomeworks() {
+  const container = document.getElementById("allHomeworks");
+
+  if (!allHomeworksCache.length) {
+    container.innerHTML = "<div class='entry'>لا توجد واجبات محفوظة.</div>";
+    return;
+  }
+
+  const search = document.getElementById("hwSearch").value.trim().toLowerCase();
+  const gradeFilter = document.getElementById("hwFilterGrade").value;
+  const subjectFilter = document.getElementById("hwFilterSubject").value;
+
+  const filtered = allHomeworksCache.filter(d => {
+    if (gradeFilter && d.grade !== gradeFilter) return false;
+    if (subjectFilter && d.subject !== subjectFilter) return false;
+    if (search && !d.homework.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    container.innerHTML = "<div class='entry'>لا توجد واجبات مطابقة لبحثك.</div>";
+    return;
+  }
+
+  let html = "";
+  filtered.forEach(d => {
+    html += `
+      <div class='entry' style='display:flex;justify-content:space-between;align-items:flex-start;gap:10px'>
+        <div>
+          <strong>${d.grade} — ${d.subject}</strong><br>
+          📅 ${d.date}<br>
+          📝 ${d.homework}
+        </div>
+        <button onclick="deleteHomework('${d.id}')" style='width:auto;padding:8px 14px;background:#ef4444;border-radius:10px;white-space:nowrap'>🗑️ حذف</button>
+      </div>`;
+  });
+  container.innerHTML = html;
 }
 
 async function deleteHomework(id) {
