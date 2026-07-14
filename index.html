@@ -455,8 +455,8 @@ let calendarTitle = "";
 
 function renderCalendar() {
   const container = document.getElementById("calendarView");
-  const monthNames = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-  const dayNames = ["أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"];
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   const firstWeekday = new Date(calendarYear, calendarMonth, 1).getDay();
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
 
@@ -471,9 +471,9 @@ function renderCalendar() {
   container.innerHTML = `
     <div class="card">
       <div class="cal-nav">
-        <button onclick="changeCalendarMonth(-1)">◀ السابق</button>
+        <button onclick="changeCalendarMonth(-1)">◀ Previous</button>
         <h3>📅 ${calendarTitle} — ${monthNames[calendarMonth]} ${calendarYear}</h3>
-        <button onclick="changeCalendarMonth(1)">التالي ▶</button>
+        <button onclick="changeCalendarMonth(1)">Next ▶</button>
       </div>
       <div class="cal-grid">
         ${dayNames.map(n => `<div class="cal-head">${n}</div>`).join("")}
@@ -494,7 +494,7 @@ function showCalendarDay(dateStr) {
   const items = calendarData[dateStr] || [];
   const detail = document.getElementById("calendarDayDetail");
   if (!items.length) { detail.innerHTML = ""; return; }
-  detail.innerHTML = `<h4 style="margin-top:16px">📌 واجبات ${dateStr}</h4>` +
+  detail.innerHTML = `<h4 style="margin-top:16px">📌 Homework for ${dateStr}</h4>` +
     items.map(d => `<div class="entry">📝 ${d.homework}</div>`).join("");
 }
 
