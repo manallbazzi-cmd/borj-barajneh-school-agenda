@@ -1,4 +1,4 @@
-const CACHE_NAME = "borj-agenda-v1";
+const CACHE_NAME = "borj-agenda-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -29,12 +29,9 @@ self.addEventListener("fetch", event => {
   if (new URL(event.request.url).origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      const network = fetch(event.request).then(response => {
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone()));
-        return response;
-      }).catch(() => cached);
-      return cached || network;
-    })
+    fetch(event.request).then(response => {
+      caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone()));
+      return response;
+    }).catch(() => caches.match(event.request))
   );
 });
