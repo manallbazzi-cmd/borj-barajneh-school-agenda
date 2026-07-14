@@ -185,6 +185,7 @@ box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
 </div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyAdtHe-hPEI-np_UVDxZUgObbL6ztE-UPo",
@@ -207,7 +208,11 @@ async function loadPasswords() {
     if (doc.exists) passwords = { ...passwords, ...doc.data() };
   } catch(e) {}
 }
-loadPasswords();
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) loadPasswords();
+});
+firebase.auth().signInAnonymously().catch(e => console.error("Auth error:", e));
 
 async function loadAnnouncementBanner() {
   try {
